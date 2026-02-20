@@ -22,15 +22,15 @@ public class AuthService {
 
     public AuthResponse register(RegisterRequest request) {
 
-        if (userRepository.existsByEmail(request.email())) {
+        if (userRepository.existsByEmail(request.getEmail())) {
             throw new RuntimeException("Email already registered");
         }
 
         User user = User.builder()
-            .name(request.name())
-            .email(request.email())
-            .password(passwordEncoder.encode(request.password()))
-            .role(Role.valueOf(request.role()))
+            .name(request.getName())
+            .email(request.getEmail())
+            .password(passwordEncoder.encode(request.getPassword()))
+            .role(Role.valueOf(request.getRole()))
             .build();
 
         userRepository.save(user);
@@ -41,10 +41,10 @@ public class AuthService {
 
     public AuthResponse authenticate(LoginRequest request) {
 
-        User user = userRepository.findByEmail(request.email())
+        User user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new RuntimeException("Invalid credentials"));
 
-        if (!passwordEncoder.matches(request.password(), user.getPassword())) {
+        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
             throw new RuntimeException("Invalid credentials");
         }
 

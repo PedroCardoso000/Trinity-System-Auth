@@ -1,16 +1,15 @@
 package com.trinity.manneger.dto;
 
-public record LoginRequest(
-        String email,
-        String password) {
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-        public void setEmail(String string) {
-                // TODO Auto-generated method stub
-                throw new UnsupportedOperationException("Unimplemented method 'setEmail'");
-        }
-
-        public void setPassword(String string) {
-            // TODO Auto-generated method stub
-            throw new UnsupportedOperationException("Unimplemented method 'setPassword'");
-        }
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+public class LoginRequest {
+        private String email;
+        private String password;
 }
