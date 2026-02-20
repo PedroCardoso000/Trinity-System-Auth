@@ -38,7 +38,7 @@ public class User implements UserDetails {
     private Role role;
 
     @Column
-    private String IdAcademic;
+    private Long IdAcademic;
 
     @Column
     private Boolean active;
