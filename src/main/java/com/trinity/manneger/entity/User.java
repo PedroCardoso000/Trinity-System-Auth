@@ -38,7 +38,7 @@ public class User implements UserDetails {
     private Role role;
 
     @Column
-    private String nameAcademic;
+    private String IdAcademic;
 
     @Column
     private Boolean active;
@@ -83,6 +83,12 @@ public class User implements UserDetails {
         }
         if (password == null || password.isEmpty() || password.isBlank()) {
             throw new IllegalArgumentException("Password cannot be null or empty");
+        }
+        if (role == Role.ADMIN && IdAcademic == null) {
+            throw new IllegalArgumentException("Id academic cannot be null for user role");
+        }
+        if (active == null) {
+            active = true;
         }
         if (role == null) {
             throw new IllegalArgumentException("Role cannot be null");

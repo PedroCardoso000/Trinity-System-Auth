@@ -4,9 +4,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.trinity.manneger.dto.AuthResponse;
-import com.trinity.manneger.dto.LoginRequest;
-import com.trinity.manneger.dto.RegisterRequest;
+import com.trinity.manneger.domain.dto.AuthResponse;
+import com.trinity.manneger.domain.dto.LoginRequest;
+import com.trinity.manneger.domain.dto.RegisterRequest;
 import com.trinity.manneger.service.AuthService;
 
 @RestController
@@ -17,14 +17,25 @@ public class AuthController {
     private final AuthService authService;
 
     /**
+     * Confirm register student
+     * 
+     * @param request
+     * @return
+     */
+    @PostMapping("/register-aluno")
+    public ResponseEntity<AuthResponse> registerStudent(@RequestBody RegisterRequest request) {
+        return ResponseEntity.ok(authService.registerStudent(request));
+    }
+
+    /**
      * Register a new user
      * 
      * @param request
      * @return
      */
-    @PostMapping("/register")
+    @PostMapping("/register-adm")
     public ResponseEntity<AuthResponse> register(@RequestBody RegisterRequest request) {
-        return ResponseEntity.ok(authService.register(request));
+        return ResponseEntity.ok(authService.registerAdm(request));
     }
 
     /**
