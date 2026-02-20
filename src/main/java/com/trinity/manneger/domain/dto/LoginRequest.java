@@ -1,4 +1,4 @@
-package com.trinity.manneger.dto;
+package com.trinity.manneger.domain.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
