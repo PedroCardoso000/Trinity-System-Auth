@@ -9,7 +9,6 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class Academic {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

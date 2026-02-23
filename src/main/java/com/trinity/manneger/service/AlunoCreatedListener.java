@@ -21,16 +21,19 @@ public class AlunoCreatedListener {
     public void handleAlunoCreated(AlunoCreatedEvent event) {
 
         if (userRepository.existsByEmail(event.getEmail())) {
+            // ADICIONAR UM MENSAGEM DE ERROR;
+            System.out.println("Erro: Aluno com email " + event.getEmail() + " já existe.");
             return;
         }
 
-        User user = User.builder()
-                .name(event.getNome())
-                .email(event.getEmail())
-                .password("") // ainda não tem senha
-                .role(Role.STUDENT)
-                .active(false)
-                .build();
+        User user = new User();
+        user.setName(event.getNome());
+        user.setEmail(event.getEmail());
+        user.setPassword(""); // ainda não tem senha
+        user.setRole(Role.STUDENT);
+        user.setActive(false);
+        user.setIdAcademic(event.getAcademicId());
+        user.setIdBranch(event.getBranchId());
 
         userRepository.save(user);
     }

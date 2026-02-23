@@ -3,7 +3,7 @@ package com.trinity.manneger.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.trinity.manneger.domain.dto.AuthResponse;
 import com.trinity.manneger.domain.dto.LoginRequest;
-import com.trinity.manneger.domain.dto.RegisterRequest;
+import com.trinity.manneger.domain.dto.RegisterRequestStudent;
 import com.trinity.manneger.domain.dto.RegisterRequestAdm;
 import com.trinity.manneger.service.AuthService;
 import org.junit.jupiter.api.Test;
@@ -31,7 +31,7 @@ class AuthControllerTest {
 
     @Test
     void shouldRegisterUserSuccessfully() throws Exception {
-        RegisterRequest request = new RegisterRequest();
+        RegisterRequestStudent request = new RegisterRequestStudent();
         request.setEmail("test@email.com");
         request.setPassword("123456");
 

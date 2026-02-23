@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 import com.trinity.manneger.domain.dto.AuthResponse;
 import com.trinity.manneger.domain.dto.LoginRequest;
-import com.trinity.manneger.domain.dto.RegisterRequest;
+import com.trinity.manneger.domain.dto.RegisterRequestStudent;
 import com.trinity.manneger.domain.dto.RegisterRequestAdm;
 import com.trinity.manneger.service.AuthService;
 
@@ -27,7 +27,7 @@ public class AuthController {
      * @return
      */
     @PostMapping("/register-aluno")
-    public ResponseEntity<AuthResponse> registerStudent(@RequestBody RegisterRequest request) {
+    public ResponseEntity<AuthResponse> registerStudent(@RequestBody RegisterRequestStudent request) {
         return ResponseEntity.ok(authService.registerStudent(request));
     }
 

@@ -9,10 +9,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class RegisterRequest {
-        private String name;
+public class RegisterRequestStudent {
         private String email;
         private String password;
-        private String role;
-        private Long academic;
 }

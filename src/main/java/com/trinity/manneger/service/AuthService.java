@@ -10,7 +10,7 @@ import com.trinity.manneger.domain.Role;
 import com.trinity.manneger.domain.dto.AcademicCreatedEvent;
 import com.trinity.manneger.domain.dto.AuthResponse;
 import com.trinity.manneger.domain.dto.LoginRequest;
-import com.trinity.manneger.domain.dto.RegisterRequest;
+import com.trinity.manneger.domain.dto.RegisterRequestStudent;
 import com.trinity.manneger.domain.dto.RegisterRequestAdm;
 import com.trinity.manneger.entity.Academic;
 import com.trinity.manneger.entity.User;
@@ -34,7 +34,7 @@ public class AuthService {
     @Autowired
     private EventPublisher eventPublisher;
 
-    public AuthResponse registerStudent(RegisterRequest request) {
+    public AuthResponse registerStudent(RegisterRequestStudent request) {
 
         User user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new RuntimeException("Aluno não encontrado"));
@@ -54,21 +54,19 @@ public class AuthService {
             throw new RuntimeException("Email already registered");
         }
 
-        User user = User.builder()
-                .name(request.getName())
-                .email(request.getEmail())
-                .password(passwordEncoder.encode(request.getPassword()))
-                .role(Role.ADMIN)
-                .active(true)
-                .build();
+        User user = new User();
+        user.setName(request.getName());
+        user.setEmail(request.getEmail());
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
+        user.setRole(Role.ADMIN);
+        user.setActive(true);
 
         user = userRepository.save(user);
 
-        Academic academic = Academic.builder()
-                .email(request.getEmail())
-                .name(request.getNameAcademia())
-                .Iduser(user.getId().toString())
-                .build();
+        Academic academic = new Academic();
+        academic.setEmail(request.getEmail());
+        academic.setName(request.getNameAcademia());
+        academic.setIduser(user.getId().toString());
 
         academic = academicRepository.save(academic);
 
