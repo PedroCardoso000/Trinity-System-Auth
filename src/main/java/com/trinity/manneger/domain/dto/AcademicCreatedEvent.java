@@ -6,7 +6,6 @@ import lombok.*;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
 public class AcademicCreatedEvent {
     private Long academicId;
     private String name;

@@ -41,6 +41,9 @@ public class User implements UserDetails {
     private Long IdAcademic;
 
     @Column
+    private Long IdBranch;
+
+    @Column
     private Boolean active;
 
     @Override

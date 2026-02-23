@@ -1,6 +1,8 @@
 package com.trinity.manneger.service;
 
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -9,6 +11,7 @@ import com.trinity.manneger.domain.dto.AcademicCreatedEvent;
 import com.trinity.manneger.domain.dto.AuthResponse;
 import com.trinity.manneger.domain.dto.LoginRequest;
 import com.trinity.manneger.domain.dto.RegisterRequest;
+import com.trinity.manneger.domain.dto.RegisterRequestAdm;
 import com.trinity.manneger.entity.Academic;
 import com.trinity.manneger.entity.User;
 import com.trinity.manneger.jwt.JwtTokenProvider;
@@ -20,11 +23,16 @@ import com.trinity.manneger.repository.UserRepository;
 @RequiredArgsConstructor
 public class AuthService {
 
-    private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
-    private final JwtTokenProvider jwtTokenProvider;
-    private final AcademicRepository academicRepository;
-    private final EventPublisher eventPublisher;
+    @Autowired
+    private UserRepository userRepository;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+    @Autowired
+    private JwtTokenProvider jwtTokenProvider;
+    @Autowired
+    private AcademicRepository academicRepository;
+    @Autowired
+    private EventPublisher eventPublisher;
 
     public AuthResponse registerStudent(RegisterRequest request) {
 
@@ -40,7 +48,7 @@ public class AuthService {
         return new AuthResponse(token);
     }
 
-    public AuthResponse registerAdm(RegisterRequest request) {
+    public AuthResponse registerAdm(RegisterRequestAdm request) {
 
         if (userRepository.existsByEmail(request.getEmail())) {
             throw new RuntimeException("Email already registered");
@@ -54,22 +62,26 @@ public class AuthService {
                 .active(true)
                 .build();
 
-        userRepository.save(user);
+        user = userRepository.save(user);
 
         Academic academic = Academic.builder()
                 .email(request.getEmail())
-                .name(request.getName())
+                .name(request.getNameAcademia())
                 .Iduser(user.getId().toString())
                 .build();
 
-        academicRepository.save(academic);
+        academic = academicRepository.save(academic);
+
+        user.setIdAcademic(academic.getId());
+        userRepository.save(user);
+
+        AcademicCreatedEvent event = new AcademicCreatedEvent();
+        event.setAcademicId(academic.getId());
+        event.setName(academic.getName());
 
         eventPublisher.publish(
                 "academic.created",
-                AcademicCreatedEvent.builder()
-                        .academicId(academic.getId())
-                        .name(academic.getName())
-                        .build());
+                event);
 
         String token = jwtTokenProvider.generateToken(user, academic.getId());
         return new AuthResponse(token);

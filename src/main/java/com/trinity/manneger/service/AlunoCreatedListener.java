@@ -28,7 +28,7 @@ public class AlunoCreatedListener {
                 .name(event.getNome())
                 .email(event.getEmail())
                 .password("") // ainda não tem senha
-                .role(Role.USER)
+                .role(Role.STUDENT)
                 .active(false)
                 .build();
 

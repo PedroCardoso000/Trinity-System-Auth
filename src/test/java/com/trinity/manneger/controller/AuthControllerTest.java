@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.trinity.manneger.domain.dto.AuthResponse;
 import com.trinity.manneger.domain.dto.LoginRequest;
 import com.trinity.manneger.domain.dto.RegisterRequest;
+import com.trinity.manneger.domain.dto.RegisterRequestAdm;
 import com.trinity.manneger.service.AuthService;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -36,7 +37,7 @@ class AuthControllerTest {
 
         AuthResponse response = new AuthResponse("fake-jwt-token");
 
-        Mockito.when(authService.registerAdm(Mockito.any(RegisterRequest.class)))
+        Mockito.when(authService.registerAdm(Mockito.any(RegisterRequestAdm.class)))
                 .thenReturn(response);
 
         mockMvc.perform(post("/auth/register")
