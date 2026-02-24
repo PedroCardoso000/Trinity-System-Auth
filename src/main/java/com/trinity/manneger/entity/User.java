@@ -17,7 +17,6 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class User implements UserDetails {
 
     @Id
@@ -36,6 +35,15 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Role role;
+
+    @Column
+    private Long IdAcademic;
+
+    @Column
+    private Long IdBranch;
+
+    @Column
+    private Boolean active;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -77,6 +85,12 @@ public class User implements UserDetails {
         }
         if (password == null || password.isEmpty() || password.isBlank()) {
             throw new IllegalArgumentException("Password cannot be null or empty");
+        }
+        if (role == Role.ADMIN && IdAcademic == null) {
+            throw new IllegalArgumentException("Id academic cannot be null for user role");
+        }
+        if (active == null) {
+            active = true;
         }
         if (role == null) {
             throw new IllegalArgumentException("Role cannot be null");
