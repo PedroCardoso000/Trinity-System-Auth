@@ -1,17 +1,17 @@
-Serviços iniciados para o Auth:
+Auth Service Infrastructure:
 
-PostgreSQL: Rodando em localhost:5430 (Database: trinity-auth-service).
+PostgreSQL: Running at localhost:5430 (Database: trinity-auth-service).
 
-RabbitMQ: Painel administrativo em http://localhost:15672 (guest/guest).
+RabbitMQ: Management panel at http://localhost:15672 (guest/guest).
 
-2. Configurações do Projeto
-   As configurações principais residem no src/main/resources/application.properties. Certifique-se de que as credenciais do banco coincidem com o seu ambiente Docker.
+2. Application Configuration
+   Main settings are located in src/main/resources/application.properties. Ensure the database credentials match your Docker environment.
 
 🔌 API Endpoints
-Swagger UI: Com o projeto rodando, acesse  para a documentação técnica detalhada.
+Swagger UI: While the service is running, access  for detailed technical documentation.
 
-🏗️ Estrutura de Eventos
-Ao realizar um cadastro bem-sucedido, o serviço publica eventos para as filas do RabbitMQ:
+🏗️ Event Architecture
+Upon successful registration, the service publishes events to RabbitMQ exchanges:
 
 UserCreatedEvent
 
@@ -19,13 +19,13 @@ AcademicCreatedEvent
 
 Alunocreatedevent
 
-Esses eventos permitem que o microsserviço Core crie automaticamente as entidades de negócio relacionadas ao novo usuário.
+These events allow the Core microservice to automatically create business entities related to the new user.
 
-⚠️ Resolução de Problemas (Troubleshooting)
-Falha na Inicialização: Verifique se o container trinity-auth-db está ativo. O Spring Boot não iniciará se não conseguir conectar ao banco na porta 5430.
+⚠️ Troubleshooting
+Connection Failure: Ensure the trinity-auth-db container is running. Spring Boot will fail to start if it cannot connect to the database on port 5430.
 
-Erro 403 Forbidden: Certifique-se de estar enviando o Token JWT corretamente no Header (Authorization: Bearer <token>) para rotas protegidas.
+403 Forbidden: Ensure you are sending the JWT Token correctly in the Header (Authorization: Bearer <token>) for protected routes.
 
-Mensagens não chegam ao Core: Verifique no painel do RabbitMQ se as filas foram criadas e se há consumidores ativos.
+Messaging Issues: Check the RabbitMQ panel to verify if queues were created and if there are active consumers from the Core service.
 
-Desenvolvido para o ecossistema Trinity Academy 🥋
+Developed for the Trinity Academy ecosystem 🥋
