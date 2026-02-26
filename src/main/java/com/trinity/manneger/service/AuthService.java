@@ -3,12 +3,14 @@ package com.trinity.manneger.service;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.trinity.manneger.domain.Role;
 import com.trinity.manneger.domain.dto.AcademicCreatedEvent;
-import com.trinity.manneger.domain.dto.AuthResponse;
+import com.trinity.manneger.domain.dto.AuthResponseAdm;
+import com.trinity.manneger.domain.dto.AuthResponseStudent;
 import com.trinity.manneger.domain.dto.LoginRequest;
 import com.trinity.manneger.domain.dto.RegisterRequestStudent;
 import com.trinity.manneger.domain.dto.RegisterRequestAdm;
@@ -34,7 +36,7 @@ public class AuthService {
     @Autowired
     private EventPublisher eventPublisher;
 
-    public AuthResponse registerStudent(RegisterRequestStudent request) {
+    public AuthResponseStudent registerStudent(RegisterRequestStudent request) {
 
         User user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new RuntimeException("Aluno não encontrado"));
@@ -45,10 +47,10 @@ public class AuthService {
         userRepository.save(user);
 
         String token = jwtTokenProvider.generateToken(user);
-        return new AuthResponse(token);
+        return new AuthResponseStudent(token, user.getEmail(), user.getIdAcademic().toString(), Role.STUDENT);
     }
 
-    public AuthResponse registerAdm(RegisterRequestAdm request) {
+    public AuthResponseAdm registerAdm(RegisterRequestAdm request) {
 
         if (userRepository.existsByEmail(request.getEmail())) {
             throw new RuntimeException("Email already registered");
@@ -82,7 +84,7 @@ public class AuthService {
                 event);
 
         String token = jwtTokenProvider.generateToken(user, academic.getId());
-        return new AuthResponse(token);
+        return new AuthResponseAdm(token, user.getEmail(), academic.getId().toString(), Role.ADMIN);
     }
 
     /**
@@ -91,7 +93,7 @@ public class AuthService {
      * @param request
      * @return
      */
-    public AuthResponse authenticate(LoginRequest request) {
+    public Object authenticate(LoginRequest request) {
 
         User user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new RuntimeException("Invalid credentials"));
@@ -101,6 +103,19 @@ public class AuthService {
         }
 
         String token = jwtTokenProvider.generateToken(user);
-        return new AuthResponse(token);
+
+        if (user.getRole() == Role.ADMIN) {
+            return new AuthResponseAdm(
+                    token,
+                    user.getEmail(),
+                    user.getIdAcademic().toString(),
+                    Role.ADMIN);
+        }
+
+        return new AuthResponseStudent(
+                token,
+                user.getEmail(),
+                user.getIdAcademic().toString(),
+                Role.STUDENT);
     }
 }

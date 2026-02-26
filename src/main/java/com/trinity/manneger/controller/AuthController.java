@@ -6,7 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.trinity.manneger.domain.dto.AuthResponse;
+import com.trinity.manneger.domain.dto.AuthResponseAdm;
+import com.trinity.manneger.domain.dto.AuthResponseStudent;
 import com.trinity.manneger.domain.dto.LoginRequest;
 import com.trinity.manneger.domain.dto.RegisterRequestStudent;
 import com.trinity.manneger.domain.dto.RegisterRequestAdm;
@@ -27,7 +28,7 @@ public class AuthController {
      * @return
      */
     @PostMapping("/register-aluno")
-    public ResponseEntity<AuthResponse> registerStudent(@RequestBody RegisterRequestStudent request) {
+    public ResponseEntity<AuthResponseStudent> registerStudent(@RequestBody RegisterRequestStudent request) {
         return ResponseEntity.ok(authService.registerStudent(request));
     }
 
@@ -38,7 +39,7 @@ public class AuthController {
      * @return
      */
     @PostMapping("/register-adm")
-    public ResponseEntity<AuthResponse> register(@RequestBody RegisterRequestAdm request) {
+    public ResponseEntity<AuthResponseAdm> register(@RequestBody RegisterRequestAdm request) {
         return ResponseEntity.ok(authService.registerAdm(request));
     }
 
@@ -49,7 +50,7 @@ public class AuthController {
      * @return
      */
     @PostMapping("/login")
-    public ResponseEntity<AuthResponse> login(@RequestBody LoginRequest request) {
+    public ResponseEntity<?> login(@RequestBody LoginRequest request) {
         return ResponseEntity.ok(authService.authenticate(request));
     }
 }
