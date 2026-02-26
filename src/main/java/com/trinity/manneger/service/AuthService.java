@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 
 import com.trinity.manneger.domain.Role;
 import com.trinity.manneger.domain.dto.AcademicCreatedEvent;
-import com.trinity.manneger.domain.dto.AuthResponse;
 import com.trinity.manneger.domain.dto.AuthResponseAdm;
 import com.trinity.manneger.domain.dto.AuthResponseStudent;
 import com.trinity.manneger.domain.dto.LoginRequest;
@@ -48,7 +47,7 @@ public class AuthService {
         userRepository.save(user);
 
         String token = jwtTokenProvider.generateToken(user);
-        return new AuthResponseStudent(token);
+        return new AuthResponseStudent(token, user.getEmail(), user.getIdAcademic().toString(), Role.STUDENT);
     }
 
     public AuthResponseAdm registerAdm(RegisterRequestAdm request) {
@@ -85,7 +84,7 @@ public class AuthService {
                 event);
 
         String token = jwtTokenProvider.generateToken(user, academic.getId());
-        return new AuthResponseAdm(token, academic.getId().toString());
+        return new AuthResponseAdm(token, user.getEmail(), academic.getId().toString(), Role.ADMIN);
     }
 
     /**
@@ -94,7 +93,7 @@ public class AuthService {
      * @param request
      * @return
      */
-    public ResponseEntity<?> authenticate(LoginRequest request) {
+    public Object authenticate(LoginRequest request) {
 
         User user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new RuntimeException("Invalid credentials"));
@@ -106,10 +105,17 @@ public class AuthService {
         String token = jwtTokenProvider.generateToken(user);
 
         if (user.getRole() == Role.ADMIN) {
-            return ResponseEntity.ok(new AuthResponseAdm(token, user.getIdAcademic().toString()));
+            return new AuthResponseAdm(
+                    token,
+                    user.getEmail(),
+                    user.getIdAcademic().toString(),
+                    Role.ADMIN);
         }
 
-        return ResponseEntity.ok(new AuthResponseStudent(token));
-
+        return new AuthResponseStudent(
+                token,
+                user.getEmail(),
+                user.getIdAcademic().toString(),
+                Role.STUDENT);
     }
 }
