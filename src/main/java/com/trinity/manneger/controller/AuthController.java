@@ -8,8 +8,10 @@ import org.springframework.web.bind.annotation.*;
 
 import com.trinity.manneger.domain.dto.AuthResponseAdm;
 import com.trinity.manneger.domain.dto.AuthResponseStudent;
+import com.trinity.manneger.domain.dto.AuthResponseTeacher;
 import com.trinity.manneger.domain.dto.LoginRequest;
 import com.trinity.manneger.domain.dto.RegisterRequestStudent;
+import com.trinity.manneger.domain.dto.RegisterRequestTeacher;
 import com.trinity.manneger.domain.dto.RegisterRequestAdm;
 import com.trinity.manneger.service.AuthService;
 
@@ -22,12 +24,23 @@ public class AuthController {
     private AuthService authService;
 
     /**
+     * Register a new teacher
+     * 
+     * @param request
+     * @return
+     */
+    @PostMapping("/register-teacher")
+    public ResponseEntity<AuthResponseTeacher> registerTeacher(@RequestBody RegisterRequestTeacher request) {
+        return ResponseEntity.ok(authService.registerTeacher(request));
+    }
+
+    /**
      * Confirm register student
      * 
      * @param request
      * @return
      */
-    @PostMapping("/register-aluno")
+    @PostMapping("/register-student")
     public ResponseEntity<AuthResponseStudent> registerStudent(@RequestBody RegisterRequestStudent request) {
         return ResponseEntity.ok(authService.registerStudent(request));
     }

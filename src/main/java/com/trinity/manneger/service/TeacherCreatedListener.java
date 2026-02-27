@@ -1,12 +1,10 @@
 package com.trinity.manneger.service;
 
-import java.util.List;
-
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Service;
 
 import com.trinity.manneger.domain.Role;
-import com.trinity.manneger.domain.dto.AlunoCreatedEvent;
+import com.trinity.manneger.domain.dto.TeacherCreatedEvent;
 import com.trinity.manneger.entity.User;
 import com.trinity.manneger.rabbitmq.RabbitMQConfig;
 import com.trinity.manneger.repository.UserRepository;
@@ -15,28 +13,28 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class AlunoCreatedListener {
+public class TeacherCreatedListener {
 
     private final UserRepository userRepository;
     private final UserEventPublisher userEventPublisher;
 
-    @RabbitListener(queues = RabbitMQConfig.ALUNO_QUEUE)
-    public void handleAlunoCreated(AlunoCreatedEvent event) {
+    @RabbitListener(queues = RabbitMQConfig.TEACHER_QUEUE)
+    public void handleTeacherCreated(TeacherCreatedEvent event) {
 
         if (userRepository.existsByEmail(event.getEmail())) {
             // ADICIONAR UM MENSAGEM DE ERROR;
-            System.out.println("Erro: Aluno with email " + event.getEmail() + " already exists.");
+            System.out.println("Erro: Professor with email " + event.getEmail() + " already exists.");
             return;
         }
 
         User user = new User();
-        user.setName(event.getNome());
+        user.setName(event.getName());
         user.setEmail(event.getEmail());
-        user.setPassword(""); // ainda não tem senha
-        user.setRole(Role.STUDENT);
+        user.setPassword("");
+        user.setRole(Role.TEACHER);
         user.setActive(false);
         user.setIdAcademic(event.getAcademicId());
-        user.setIdBranch(List.of(event.getBranchId()));
+        user.setIdBranch(event.getBranchId());
 
         userRepository.save(user);
 

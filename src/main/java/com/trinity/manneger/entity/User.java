@@ -40,7 +40,7 @@ public class User implements UserDetails {
     private Long IdAcademic;
 
     @Column
-    private Long IdBranch;
+    private List<Long> IdBranch;
 
     @Column
     private Boolean active;
