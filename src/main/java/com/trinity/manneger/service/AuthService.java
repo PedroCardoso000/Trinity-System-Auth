@@ -49,7 +49,8 @@ public class AuthService {
         userRepository.save(user);
 
         String token = jwtTokenProvider.generateToken(user);
-        AuthResponseStudent response = new AuthResponseStudent(token, user.getEmail(), user.getIdAcademic().toString(), Role.STUDENT);
+        AuthResponseStudent response = new AuthResponseStudent(token, user.getEmail(), user.getIdAcademic().toString(),
+                Role.STUDENT);
         return response;
     }
 
@@ -65,7 +66,8 @@ public class AuthService {
         userRepository.save(user);
 
         String token = jwtTokenProvider.generateToken(user);
-        AuthResponseTeacher response = new AuthResponseTeacher(token, user.getEmail(), user.getIdAcademic().toString(), Role.TEACHER);
+        AuthResponseTeacher response = new AuthResponseTeacher(token, user.getEmail(), user.getIdAcademic().toString(),
+                Role.TEACHER);
         return response;
     }
 
@@ -104,7 +106,8 @@ public class AuthService {
                 event);
 
         String token = jwtTokenProvider.generateToken(user, academic.getId());
-        AuthResponseAdm response = new AuthResponseAdm(token, user.getEmail(), academic.getId().toString(), Role.ADMIN);
+        AuthResponseAdm response = new AuthResponseAdm(token, user.getEmail(), academic.getId().toString(),
+                academic.getName(), user.getName(), Role.ADMIN);
         return response;
     }
 
@@ -126,11 +129,14 @@ public class AuthService {
         String token = jwtTokenProvider.generateToken(user);
 
         if (user.getRole() == Role.ADMIN) {
-                AuthResponseAdm response = new AuthResponseAdm(token, user.getEmail(), user.getIdAcademic().toString(), Role.ADMIN);
-                return response;
+            Academic academic = academicRepository.findById(user.getIdAcademic()).get();
+            AuthResponseAdm response = new AuthResponseAdm(token, user.getEmail(), user.getIdAcademic().toString(),
+                    academic.getName(), user.getName(), Role.ADMIN);
+            return response;
         }
 
-        AuthResponseStudent response = new AuthResponseStudent(token, user.getEmail(), user.getIdAcademic().toString(), Role.STUDENT);
+        AuthResponseStudent response = new AuthResponseStudent(token, user.getEmail(), user.getIdAcademic().toString(),
+                Role.STUDENT);
         return response;
     }
 }

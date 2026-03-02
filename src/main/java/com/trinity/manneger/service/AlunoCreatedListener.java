@@ -38,7 +38,9 @@ public class AlunoCreatedListener {
         user.setRole(Role.STUDENT);
         user.setActive(false);
         user.setIdAcademic(event.getAcademicId());
-        user.setIdBranch(List.of(event.getBranchId()));
+        if (event.getBranchId() != null) {
+            user.setIdBranch(List.of(event.getBranchId()));
+        }
 
         userRepository.save(user);
 
@@ -51,6 +53,7 @@ public class AlunoCreatedListener {
         userRepository.findByEmail(event.getEmail())
                 .ifPresent(user -> {
                     user.setName(event.getNome());
+                    user.setEmail(event.getEmail());
                     user.setActive(event.getAtivo());
                     userRepository.save(user);
                 });
@@ -61,8 +64,7 @@ public class AlunoCreatedListener {
 
         userRepository.findByEmail(event.getEmail())
                 .ifPresent(user -> {
-                    user.setActive(false);
-                    userRepository.save(user);
+                    userRepository.delete(user);
                 });
     }
 }

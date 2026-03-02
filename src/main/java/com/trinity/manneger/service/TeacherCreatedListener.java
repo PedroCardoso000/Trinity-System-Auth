@@ -49,6 +49,7 @@ public class TeacherCreatedListener {
         userRepository.findByEmail(event.getEmail())
                 .ifPresent(user -> {
                     user.setName(event.getName());
+                    user.setEmail(event.getEmail());
                     user.setActive(event.getActive());
                     userRepository.save(user);
                 });
@@ -59,8 +60,7 @@ public class TeacherCreatedListener {
 
         userRepository.findByEmail(event.getEmail())
                 .ifPresent(user -> {
-                    user.setActive(false); // disable login
-                    userRepository.save(user);
+                    userRepository.delete(user);
                 });
     }
 }

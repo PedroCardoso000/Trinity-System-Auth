@@ -23,6 +23,8 @@ public class RabbitMQConfig {
     public static final String TEACHER_UPDATED_QUEUE = "teacher.updated.queue";
     public static final String TEACHER_DELETED_QUEUE = "teacher.deleted.queue";
 
+    public static final String ALUNO_EXCHANGE = "aluno.exchange";
+    public static final String TEACHER_EXCHANGE = "teacher.exchange";
     public static final String USER_EXCHANGE = "user.exchange";
     public static final String USER_ROUTING_KEY = "user.created";
 
@@ -32,8 +34,26 @@ public class RabbitMQConfig {
     }
 
     @Bean
+    public TopicExchange alunoExchange() {
+        return new TopicExchange(ALUNO_EXCHANGE);
+    }
+
+    @Bean
+    public Binding alunoCreatedBinding(Queue alunoQueue, TopicExchange alunoExchange) {
+        return BindingBuilder
+                .bind(alunoQueue)
+                .to(alunoExchange)
+                .with("aluno.created");
+    }
+
+    @Bean
     public Queue teacherQueue() {
         return new Queue(TEACHER_QUEUE);
+    }
+
+    @Bean
+    public TopicExchange teacherExchange() {
+        return new TopicExchange(TEACHER_EXCHANGE);
     }
 
     @Bean
