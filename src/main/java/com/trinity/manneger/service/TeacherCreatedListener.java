@@ -5,6 +5,8 @@ import org.springframework.stereotype.Service;
 
 import com.trinity.manneger.domain.Role;
 import com.trinity.manneger.domain.dto.TeacherCreatedEvent;
+import com.trinity.manneger.domain.dto.TeacherDeletedEvent;
+import com.trinity.manneger.domain.dto.TeacherUpdatedEvent;
 import com.trinity.manneger.entity.User;
 import com.trinity.manneger.rabbitmq.RabbitMQConfig;
 import com.trinity.manneger.repository.UserRepository;
@@ -39,5 +41,26 @@ public class TeacherCreatedListener {
         userRepository.save(user);
 
         userEventPublisher.publishUserCreated(user.getId(), user.getEmail());
+    }
+
+    @RabbitListener(queues = RabbitMQConfig.TEACHER_UPDATED_QUEUE)
+    public void handleTeacherUpdated(TeacherUpdatedEvent event) {
+
+        userRepository.findByEmail(event.getEmail())
+                .ifPresent(user -> {
+                    user.setName(event.getName());
+                    user.setActive(event.getActive());
+                    userRepository.save(user);
+                });
+    }
+
+    @RabbitListener(queues = RabbitMQConfig.TEACHER_DELETED_QUEUE)
+    public void handleTeacherDeleted(TeacherDeletedEvent event) {
+
+        userRepository.findByEmail(event.getEmail())
+                .ifPresent(user -> {
+                    user.setActive(false); // disable login
+                    userRepository.save(user);
+                });
     }
 }

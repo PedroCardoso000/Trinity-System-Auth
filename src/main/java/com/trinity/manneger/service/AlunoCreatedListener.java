@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 
 import com.trinity.manneger.domain.Role;
 import com.trinity.manneger.domain.dto.AlunoCreatedEvent;
+import com.trinity.manneger.domain.dto.AlunoDeletedEvent;
+import com.trinity.manneger.domain.dto.AlunoUpdatedEvent;
 import com.trinity.manneger.entity.User;
 import com.trinity.manneger.rabbitmq.RabbitMQConfig;
 import com.trinity.manneger.repository.UserRepository;
@@ -32,7 +34,7 @@ public class AlunoCreatedListener {
         User user = new User();
         user.setName(event.getNome());
         user.setEmail(event.getEmail());
-        user.setPassword(""); // ainda não tem senha
+        user.setPassword(""); 
         user.setRole(Role.STUDENT);
         user.setActive(false);
         user.setIdAcademic(event.getAcademicId());
@@ -41,5 +43,26 @@ public class AlunoCreatedListener {
         userRepository.save(user);
 
         userEventPublisher.publishUserCreated(user.getId(), user.getEmail());
+    }
+
+    @RabbitListener(queues = RabbitMQConfig.ALUNO_UPDATED_QUEUE)
+    public void handleAlunoUpdated(AlunoUpdatedEvent event) {
+
+        userRepository.findByEmail(event.getEmail())
+                .ifPresent(user -> {
+                    user.setName(event.getNome());
+                    user.setActive(event.getAtivo());
+                    userRepository.save(user);
+                });
+    }
+
+    @RabbitListener(queues = RabbitMQConfig.ALUNO_DELETED_QUEUE)
+    public void handleAlunoDeleted(AlunoDeletedEvent event) {
+
+        userRepository.findByEmail(event.getEmail())
+                .ifPresent(user -> {
+                    user.setActive(false);
+                    userRepository.save(user);
+                });
     }
 }
