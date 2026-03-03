@@ -37,8 +37,8 @@ class AuthControllerTest {
 
         AuthResponse response = new AuthResponse("fake-jwt-token");
 
-        Mockito.when(authService.registerAdm(Mockito.any(RegisterRequestAdm.class)))
-                .thenReturn(response);
+        // Mockito.when(authService.registerAdm(Mockito.any(RegisterRequestAdm.class)))
+        //         .thenReturn(response);
 
         mockMvc.perform(post("/auth/register")
                         .contentType(MediaType.APPLICATION_JSON)
