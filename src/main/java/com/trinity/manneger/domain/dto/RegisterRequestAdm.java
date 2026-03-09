@@ -15,5 +15,4 @@ public class RegisterRequestAdm {
         private String email;
         private String password;
         private String role;
-        private Long academic;
 }
