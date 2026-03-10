@@ -1,9 +1,10 @@
 package com.trinity.manneger.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.trinity.manneger.dto.AuthResponse;
-import com.trinity.manneger.dto.LoginRequest;
-import com.trinity.manneger.dto.RegisterRequest;
+import com.trinity.manneger.domain.dto.AuthResponse;
+import com.trinity.manneger.domain.dto.LoginRequest;
+import com.trinity.manneger.domain.dto.RegisterRequestStudent;
+import com.trinity.manneger.domain.dto.RegisterRequestAdm;
 import com.trinity.manneger.service.AuthService;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -30,14 +31,14 @@ class AuthControllerTest {
 
     @Test
     void shouldRegisterUserSuccessfully() throws Exception {
-        RegisterRequest request = new RegisterRequest();
+        RegisterRequestStudent request = new RegisterRequestStudent();
         request.setEmail("test@email.com");
         request.setPassword("123456");
 
         AuthResponse response = new AuthResponse("fake-jwt-token");
 
-        Mockito.when(authService.register(Mockito.any(RegisterRequest.class)))
-                .thenReturn(response);
+        // Mockito.when(authService.registerAdm(Mockito.any(RegisterRequestAdm.class)))
+        //         .thenReturn(response);
 
         mockMvc.perform(post("/auth/register")
                         .contentType(MediaType.APPLICATION_JSON)
